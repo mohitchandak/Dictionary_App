@@ -1,5 +1,5 @@
 # Dictionary App
-A smart Dictionary Application to search a word's meaning easily with the convenience of a smooth Python GUI. 
+A Smart Dictionary Application to search a word's meaning easily with the convenience of a smooth Python GUI. 
 The App automatically suggests correct word spellings if you make a typo :)
 
 ## Future Development
