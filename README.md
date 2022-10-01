@@ -19,5 +19,13 @@ The App automatically suggests correct word spellings if you make a typo :)
   - dload
   - urllib3
 
+### To get started:
+
+Use `pip install -r requirements.txt` to start with installing the requirements.
+<br />
+Then `python Dictionary.py`
+<br/>
+Ensure the app has admin access as it stores the json values fetched from this repository's `data.json` in `C:/ProgramData` folder on windows.
+
 Built by Mohit Chandak and Rutuj Runwal.<br>
 &copy; All Rights Reserved under MIT License
