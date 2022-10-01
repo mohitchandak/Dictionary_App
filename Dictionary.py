@@ -77,8 +77,6 @@ def SearchWord():
 	else:
 		messagebox.showinfo("IntelliSense Error!","Seems like you are launching the app for the 1st time!\nWelcome!!!\nPlease click on 'ConnectToService' to get started")
 
-
-
 my_Btn_Cnt = Button(root,text = "ConnectToService",bg="blue",command=connect)
 my_Btn_Cnt.pack()
 
