@@ -12,7 +12,7 @@ root = Tk()
 root.title("DictionaryApp[BETA]")
 root.geometry("700x300")
 root.configure(bg="black")
-messagebox.showinfo("Hello There!","Welcome to DictionaryApp[BETA]\nPlease click on ConnectToService to get started!")
+# messagebox.showinfo("Hello There!","Welcome to DictionaryApp[BETA]\nPlease click on ConnectToService to get started!")
 root.update_idletasks()
 global my_input
 my_input = Entry(root, width=60, borderwidth=3)
@@ -108,8 +108,8 @@ def SearchWord():
 	# else:
 	# 	messagebox.showinfo("IntelliSense Error!","Seems like you are launching the app for the 1st time!\nWelcome!!!\nPlease click on 'ConnectToService' to get started")
 
-my_Btn_Cnt = Button(root,text = "ConnectToService",bg="blue",command=connect)
-my_Btn_Cnt.pack()
+# my_Btn_Cnt = Button(root,text = "ConnectToService",bg="blue",command=connect)
+# my_Btn_Cnt.pack()
 
 my_Btn = Button(root,text="Find Meaning",bg="red",command=SearchWord) 
 my_Btn.pack() 
