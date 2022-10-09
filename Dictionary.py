@@ -5,7 +5,9 @@ from tkinter import messagebox
 import threading
 import os.path
 import dload
-import urllib.request
+# import urllib.request
+import requests
+
 root = Tk()
 root.title("DictionaryApp[BETA]")
 root.geometry("700x300")
@@ -18,6 +20,35 @@ my_input.insert(0, "Please enter a word")
 my_input.pack()
 root.update_idletasks()
 
+
+"""
+	returns a list of all possible meanings for the word passed
+	if no response is recieved, an error message is displayed using tkinter messagebox
+	An error is also displayed when the system is not connected to internet.
+	API used : https://dictionaryapi.dev/
+"""
+def dictionaryWebAPI(word):
+	try:
+		response = requests.get("https://api.dictionaryapi.dev/api/v2/entries/en/"+word.lower()) #trying to get response
+	except:
+		# No internet connection
+		messagebox.showerror("Error!", "Could not connect to webAPI.\nTry checking your Internet Connection.")
+		return
+
+	if(response.status_code==200):
+		# ALL OK. Server responded
+		output = [];
+		# fetching all possible definition from the response.
+		response_object = json.loads(response.text)[0]
+		for parts_of_speech in response_object["meanings"]:
+			for meanings in parts_of_speech["definitions"]:
+				output.append(meanings["definition"])
+
+		return output
+		# messagebox.showinfo("Meaning of "+word, response.text)
+	else:
+		# SERVER ERROR (usually happens when user have entered a wrong word/spelling mistakes)
+		messagebox.showerror("Error!", "Invalid Repsonse by the server. You may have entered a wrong word or try again later.")
 
 def AboutUS():
     messagebox.showinfo("About Us","Developed by Mohit Chandak and Rutuj Runwal")
@@ -34,48 +65,48 @@ def NoFreezeConnect():
 		messagebox.showinfo("","Done! You are good to go!")
 
 def SearchWord():
-	if(os.path.isfile("C:/ProgramData/WindowsData.json")):
-	    data = json.load(open("C:/ProgramData/WindowsData.json"))
+	# if(os.path.isfile("C:/ProgramData/WindowsData.json")):
+	    # data = json.load(open("C:/ProgramData/WindowsData.json"))
 
-	    global my_word
-	    my_word = my_input.get()
+    global my_word
+    my_word = my_input.get()
 
-	    def translate(w):   
-	        w = w.lower()
-	        if w in data:
-	            return data[w]
-	        elif w.title() in data:
-	            return data[w.title()]
-	        elif w.upper() in data:
-	            return data[w.upper()]
-	        elif len(get_close_matches(w, data.keys())) > 0:
-	            print()
-	            decide = messagebox.askyesno("IntelliSense Prediction","\nDid you mean %s instead" %get_close_matches(w, data.keys())[0])
-	            if decide == 1:
-	                return data[get_close_matches(w, data.keys())[0]]
-	            elif decide != 1:
-	                return("Wrong word!")
-	            else:
-	                return("You have entered wrong input please enter just y or n: ")
+    # def translate(w):   
+    #     w = w.lower()
+    #     if w in data:
+    #         return data[w]
+    #     elif w.title() in data:
+    #         return data[w.title()]
+    #     elif w.upper() in data:
+    #         return data[w.upper()]
+    #     elif len(get_close_matches(w, data.keys())) > 0:
+    #         print()
+    #         decide = messagebox.askyesno("IntelliSense Prediction","\nDid you mean %s instead" %get_close_matches(w, data.keys())[0])
+    #         if decide == 1:
+    #             return data[get_close_matches(w, data.keys())[0]]
+    #         elif decide != 1:
+    #             return("Wrong word!")
+    #         else:
+    #             return("You have entered wrong input please enter just y or n: ")
 
-	    output = translate(my_word)
-	    if type(output) == list:
-	        messagebox.showinfo("Result","The Word Definiton is: " + output[0])
-	        if(len(output)>2):
-	        	one_more = messagebox.askyesno("IntelliSense","More than one Definiton for "+ "'" + my_input.get() + "' "  +"Exists!\nDo you want to see the other one?")
-	        	if(one_more==1):
-	        		messagebox.showinfo("Result","The Word Definition is: "+output[1])
-	        user_msg =   messagebox.askyesno("Ask","Do you want to find another word?")	
-	        if(user_msg==1):
-	        	my_input.delete(0,'end')
-	        else:
-	        	messagebox.showinfo("Thank you!","Thank You for using our tool!")
-	        	root.quit()
+    output = dictionaryWebAPI(my_word)
+    if type(output) == list:
+        messagebox.showinfo("Result","The Word Definiton is: " + output[0])
+        if(len(output)>2):
+        	one_more = messagebox.askyesno("IntelliSense","More than one Definiton for "+ "'" + my_input.get() + "' "  +"Exists!\nDo you want to see the other one?")
+        	if(one_more==1):
+        		messagebox.showinfo("Result","The Word Definition is: "+output[1])
+        user_msg =   messagebox.askyesno("Ask","Do you want to find another word?")	
+        if(user_msg==1):
+        	my_input.delete(0,'end')
+        else:
+        	messagebox.showinfo("Thank you!","Thank You for using our tool!")
+        	root.quit()
 
-	    else:
-	        print(output)
-	else:
-		messagebox.showinfo("IntelliSense Error!","Seems like you are launching the app for the 1st time!\nWelcome!!!\nPlease click on 'ConnectToService' to get started")
+    else:
+        print(output)
+	# else:
+	# 	messagebox.showinfo("IntelliSense Error!","Seems like you are launching the app for the 1st time!\nWelcome!!!\nPlease click on 'ConnectToService' to get started")
 
 my_Btn_Cnt = Button(root,text = "ConnectToService",bg="blue",command=connect)
 my_Btn_Cnt.pack()
